@@ -1,0 +1,17 @@
+409 (conflict) : indicates that the request could not be processed 
+                because of conflict in the request, such as the requested 
+                resource is not in the expected state
+
+401 (Incorrect data) : It indicate that the provided authentication information is incorrect.
+
+201 (Successfull) : It is used to indicate that a new resource has been 
+                    successfully created as a result of a POST request. 
+                    It's commonly used in response to successful resource 
+                    creation operations.
+            
+500 (Internal server error) : status code 500 represents "Internal Server Error" and 
+                    is used to indicate that the server has encountered an unexpected 
+                    condition that prevented it from fulfilling the request made by the 
+                    client. It's a generic error message that doesn't provide specific
+                    details about the nature of the problem.
+
