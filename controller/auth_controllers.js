@@ -30,14 +30,14 @@ module.exports = {
 
 
             const savedUser = await newUser.save();
-            const registerToken = jwt.sign({
+            const userToken = jwt.sign({
                 email : req.body.email
             }, 'EasyRide2023', { expiresIn: "30d" } );
 
             const {password, __v, craetedAt, updatedAt, ...others } = savedUser._doc;
             
             res.status(201).json({
-                ...others, registerToken
+                ...others, userToken
             })
         } catch (error) {
             res.status(500).json(error);
@@ -65,12 +65,12 @@ module.exports = {
             }
 
             // creating jwt token
-            const loginToken = jwt.sign({
+            const userToken = jwt.sign({
                 email : user.email
 
             }, 'EasyRide2023', { expiresIn: "30d" });
 
-            return res.status(200).json({ ...others, loginToken });
+            return res.status(200).json({ ...others, userToken });
 
         } catch (error) {
 
