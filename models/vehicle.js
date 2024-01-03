@@ -14,7 +14,7 @@ const VehicleSchema = mongoose.Schema(
         requiredHelmet : {type : Boolean, required : false},
     },
     {
-        timetamps: true
+        timestamps: true
     }
 )
 

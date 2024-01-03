@@ -12,7 +12,8 @@ module.exports = {
         var encryptedPwd = CryptoJS.AES.encrypt(req.body.password, 'EasyRide_Arun').toString();
 
         const newUser = new User({
-            userName: req.body.userName,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
             password: encryptedPwd,
@@ -33,7 +34,7 @@ module.exports = {
                 email : req.body.email
             }, 'EasyRide2023', { expiresIn: "30d" } );
 
-            const {password, __v, createdTime, updatedTime, ...others } = savedUser._doc;
+            const {password, __v, craetedAt, updatedAt, ...others } = savedUser._doc;
             
             res.status(201).json({
                 ...others, registerToken
@@ -54,7 +55,7 @@ module.exports = {
                 return res.status(404).json("User not found. Please check your credentials.");
             }
 
-            const { password, __v, createdTime, updatedTime, ...others } = user._doc;
+            const { password, __v,craetedAt, updatedAt, ...others } = user._doc;
             const decreptaedPassword = CryptoJS.AES.decrypt(user.password, 'EasyRide_Arun');
             const dePass = decreptaedPassword.toString(CryptoJS.enc.Utf8);
 

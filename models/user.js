@@ -10,11 +10,13 @@ const UserSchema = mongoose.Schema(
         profile: { type: String, required: false },
         identityType: { type: String, required: false },
         identityImage: { type: String, required: false },
-        miniBio: { type: String, required: false }
+        miniBio: { type: String, required: false },
+        vehicles: { type: [mongoose.Schema.Types.ObjectId], ref: "Vehicle" },
+        rides: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },
 
     },
     {
-        timetamps: true
+        timestamps: true
     }
 )
 

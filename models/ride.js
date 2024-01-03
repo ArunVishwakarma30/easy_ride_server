@@ -17,6 +17,8 @@ const RideSchema = mongoose.Schema(
         endTime: { type: Date, required: false },
         isCanceled: { type: Boolean, default: false },
         isFinished: { type: Boolean, default: false },
+    },{
+        timestamps : true
     }
 )
 

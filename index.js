@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URL).then(
 )
 
 app.use(express.json());
-app.use('/api/', authRoute);
+app.use('/', authRoute);
 
 app.listen(process.env.PORT || 50001,
     console.log(`App is running at PORT ${process.env.PORT || 5001}`)
