@@ -8,9 +8,9 @@ const UserSchema = mongoose.Schema(
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         profile: { type: String, default: "" },
-        identityType: { type: String, required: false },
-        identityImage: { type: String, required: false },
-        miniBio: { type: String, required: false },
+        identityType: { type: String, default: "" },
+        identityImage: { type: String, default: "" },
+        miniBio: { type: String, default: "" },
         vehicles: { type: [mongoose.Schema.Types.ObjectId], ref: "Vehicle" },
         rides: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },
 

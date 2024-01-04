@@ -5,7 +5,10 @@ const { verifyToken, verifyAndAuthorization } = require('../middleware/verifyTok
 // update user
 router.put('/', verifyToken, userController.updateUser);
 
+// Get user data
 router.get('/', verifyToken, userController.getUser);
+
+// Delete User
 router.delete('/:email', verifyAndAuthorization, userController.deleteUser);
 
 module.exports = router
