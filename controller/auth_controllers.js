@@ -32,9 +32,9 @@ module.exports = {
             const savedUser = await newUser.save();
             const userToken = jwt.sign({
                 email : req.body.email
-            }, 'EasyRide2023', { expiresIn: "30d" } );
+            }, 'EasyRide2024', { expiresIn: "30d" } );
 
-            const {password, __v, craetedAt, updatedAt, ...others } = savedUser._doc;
+            const {password, __v, createdAt, updatedAt, ...others } = savedUser._doc;
             
             res.status(201).json({
                 ...others, userToken
@@ -55,7 +55,7 @@ module.exports = {
                 return res.status(404).json("User not found. Please check your credentials.");
             }
 
-            const { password, __v,craetedAt, updatedAt, ...others } = user._doc;
+            const { password, __v,createdAt, updatedAt, ...others } = user._doc;
             const decreptaedPassword = CryptoJS.AES.decrypt(user.password, 'EasyRide_Arun');
             const dePass = decreptaedPassword.toString(CryptoJS.enc.Utf8);
 
@@ -67,8 +67,7 @@ module.exports = {
             // creating jwt token
             const userToken = jwt.sign({
                 email : user.email
-
-            }, 'EasyRide2023', { expiresIn: "30d" });
+            }, 'EasyRide2024', { expiresIn: "30d" });
 
             return res.status(200).json({ ...others, userToken });
 

@@ -7,7 +7,7 @@ const UserSchema = mongoose.Schema(
         phoneNumber: { type: String, required: false },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        profile: { type: String, required: false },
+        profile: { type: String, default: "" },
         identityType: { type: String, required: false },
         identityImage: { type: String, required: false },
         miniBio: { type: String, required: false },
