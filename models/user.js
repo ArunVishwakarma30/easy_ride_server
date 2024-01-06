@@ -8,8 +8,13 @@ const UserSchema = mongoose.Schema(
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         profile: { type: String, default: "" },
-        identityType: { type: String, default: "" },
-        identityImage: { type: String, default: "" },
+        identityDocument: {
+            documentType: { type: String, default: "" },
+            documentImg: { type: String, default: "" },
+        },
+
+        // identityType: { type: String, default: "" },
+        // identityImage: { type: String, default: "" },
         miniBio: { type: String, default: "" },
         vehicles: { type: [mongoose.Schema.Types.ObjectId], ref: "Vehicle" },
         rides: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },

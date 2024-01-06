@@ -28,7 +28,7 @@ module.exports = {
         try {
             const user = await User.findOne(
                 { email: req.user.email }
-            )
+            ).populate('vehicles');
 
             const { password, __v, ...others } = user._doc;
             res.status(200).json(others);
