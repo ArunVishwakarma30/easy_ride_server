@@ -20,13 +20,17 @@ module.exports = {
             requiredHelmet: req.body.requiredHelmet,
         }
         try {
+             // If isDefault is true, update other vehicles to set isDefault to false
+             if (newVehicle.isDefault) {
+                await Vehicle.updateMany(
+                    { userId: newVehicle.userId, _id: { $ne: new mongoose.Types.ObjectId() } },
+                    { $set: { isDefault: false } }
+                );
+            }
 
             const savedVehicle = await Vehicle.create(newVehicle);
-            console.log(`savedVehicle : ${savedVehicle}`);
 
             let vehicleId = new mongoose.Types.ObjectId(savedVehicle.id);
-            console.log(`vehicleId : ${vehicleId}`);
-            console.log(`userId : ${newVehicle.userId}`);
 
             await User.updateOne(
                 {
