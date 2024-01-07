@@ -4,7 +4,7 @@ const VehicleSchema = mongoose.Schema(
     {
         userId: { type: String, required: true },
         type: { type: String, required: true },
-        image: { type: String, required: true },
+        image: { type: String, default: "" },
         model: { type: String, required: true },
         registrationNumber: { type: String, required: true },
         offeringSeat: { type: Number, default: 1 },
