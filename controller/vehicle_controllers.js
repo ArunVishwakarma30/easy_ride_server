@@ -20,8 +20,8 @@ module.exports = {
             requiredHelmet: req.body.requiredHelmet,
         }
         try {
-             // If isDefault is true, update other vehicles to set isDefault to false
-             if (newVehicle.isDefault) {
+            // If isDefault is true, update other vehicles to set isDefault to false
+            if (newVehicle.isDefault) {
                 await Vehicle.updateMany(
                     { userId: newVehicle.userId, _id: { $ne: new mongoose.Types.ObjectId() } },
                     { $set: { isDefault: false } }
@@ -52,9 +52,13 @@ module.exports = {
         }
     },
 
-     // Update Vehicle
-     updateVehicle: async (req, res) => {
+    // Update Vehicle
+    updateVehicle: async (req, res) => {
         try {
+            const id = req.params.vehicleId;
+            const { isDefault, userId } = req.body;
+            
+
             const updatedVehicle = await Vehicle.findByIdAndUpdate(
                 req.params.vehicleId,
                 { $set: req.body },
@@ -65,14 +69,22 @@ module.exports = {
                 return res.status(404).send("Vehicle not found");
             }
 
+            if (isDefault) {
+                await Vehicle.updateMany(
+                    { userId: userId, _id: { $ne: id } },
+                    { $set: { isDefault: false } }
+                );
+            }
+
+
             res.send("Vehicle updated successfully");
         } catch (error) {
             res.status(400).json(error);
         }
     },
 
-     // Delete Vehicle
-     deleteVehicle: async (req, res) => {
+    // Delete Vehicle
+    deleteVehicle: async (req, res) => {
         try {
             const deletedVehicle = await Vehicle.findByIdAndDelete(req.params.vehicleId);
 
@@ -96,7 +108,7 @@ module.exports = {
     getAllVehiclesByUserId: async (req, res) => {
         try {
             const userVehicles = await Vehicle.find({ userId: req.params.userId })
-            .sort({ updatedAt: -1 });
+                .sort({ updatedAt: 1 });
 
             res.json(userVehicles);
         } catch (error) {
