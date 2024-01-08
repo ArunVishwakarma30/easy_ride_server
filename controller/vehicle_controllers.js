@@ -95,7 +95,8 @@ module.exports = {
     // Get all vehicles of the same user ID
     getAllVehiclesByUserId: async (req, res) => {
         try {
-            const userVehicles = await Vehicle.find({ userId: req.params.userId });
+            const userVehicles = await Vehicle.find({ userId: req.params.userId })
+            .sort({ updatedAt: -1 });
 
             res.json(userVehicles);
         } catch (error) {
