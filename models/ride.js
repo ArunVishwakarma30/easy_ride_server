@@ -6,20 +6,24 @@ const RideSchema = mongoose.Schema(
         stopBy: { type: [String], default: [] },
         destination: { type: String, required: true },
         schedule: { type: Date, required: true },
-        seats: { type: Number, required: false },
-        driverId: {
+        seatsOffering: { type: Number, required: false },
+        seatsAvailable: { type: Number, required: false },
+         driverId: {
             type: mongoose.Schema.Types.ObjectId, ref: "User"
         },
-        passangerId: {
+        vehicleId: {
+            type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"
+        },
+        passangersId: {
             type: [mongoose.Schema.Types.ObjectId], ref: "User"
         },
         startTime: { type: Date, required: false },
         endTime: { type: Date, required: false },
         isCanceled: { type: Boolean, default: false },
         isFinished: { type: Boolean, default: false },
-    },{
-        timestamps : true
-    }
+    }, {
+    timestamps: true
+}
 )
 
 module.exports = mongoose.model("Ride", RideSchema);

@@ -42,6 +42,9 @@ module.exports = {
                     },
                 }, {
                 upsert: false, new: true,
+                // upsert : When upsert is set to true, 
+                // it means that if no document is found that matches the query criteria, a new User(where we want to update) document will be inserted. 
+                // new : true -- > it means , this query woll return new updated doc, rather than old doc
             }
             )
             res.send("Vehicle Added Successfully");
@@ -57,7 +60,7 @@ module.exports = {
         try {
             const id = req.params.vehicleId;
             const { isDefault, userId } = req.body;
-            
+
 
             const updatedVehicle = await Vehicle.findByIdAndUpdate(
                 req.params.vehicleId,

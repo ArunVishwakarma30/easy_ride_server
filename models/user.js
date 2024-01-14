@@ -17,7 +17,8 @@ const UserSchema = mongoose.Schema(
         // identityImage: { type: String, default: "" },
         miniBio: { type: String, default: "" },
         vehicles: { type: [mongoose.Schema.Types.ObjectId], ref: "Vehicle" },
-        rides: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },
+        createdRide: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },
+        requestedRide: { type: [mongoose.Schema.Types.ObjectId], ref: "BookedRide" }
 
     },
     {
