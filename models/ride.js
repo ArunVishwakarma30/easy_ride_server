@@ -8,6 +8,7 @@ const RideSchema = mongoose.Schema(
         schedule: { type: Date, required: true },
         seatsOffering: { type: Number, required: false },
         seatsAvailable: { type: Number, required: false },
+        pricePerPass: { type: Number, default: 20 },
         driverId: {
             type: mongoose.Schema.Types.ObjectId, ref: "User"
         },
