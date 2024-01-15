@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const BookedRideSchema = mongoose.Schema(
+const RequestRideSchema = mongoose.Schema(
     {
         rideId: {
             type: mongoose.Schema.Types.ObjectId, ref: "Ride"
@@ -8,7 +8,7 @@ const BookedRideSchema = mongoose.Schema(
         userId : {
             type: mongoose.Schema.Types.ObjectId, ref: "User"
         },
-        seats: { type: Number, required: false },
+        seatsRequired: { type: Number, required: false },
         isAccepted: { type: Boolean, default: null },
         isCanceled: { type: Boolean, default: false },
         isFinished: { type: Boolean, default: false },
@@ -19,4 +19,4 @@ const BookedRideSchema = mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("BookedRide", RideSchema);
+module.exports = mongoose.model("RequestedRide", RequestRideSchema);

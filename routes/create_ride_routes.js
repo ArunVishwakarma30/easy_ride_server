@@ -12,11 +12,14 @@ router.get('/:rideId', verifyToken, createRideController.GetRide);
 router.get('/allRides/:userId', verifyToken, createRideController.GetAllRides);
 // here we can provide, either userId or driverId
 
-// // Update Ride
-// router.put('/:rideId', verifyToken, vehicleController.updateVehicle);
+// Update Ride
+router.put('/:rideId', verifyToken, createRideController.UpdateRide);
 
 // Delete vehicle
 router.delete('/:rideId', verifyToken, createRideController.DeleteRide);
+
+// search for rides
+router.post('/search', verifyToken, createRideController.SearchRides);
 
 
 module.exports = router

@@ -18,7 +18,7 @@ const UserSchema = mongoose.Schema(
         miniBio: { type: String, default: "" },
         vehicles: { type: [mongoose.Schema.Types.ObjectId], ref: "Vehicle" },
         createdRide: { type: [mongoose.Schema.Types.ObjectId], ref: "Ride" },
-        requestedRide: { type: [mongoose.Schema.Types.ObjectId], ref: "BookedRide" }
+        requestedRide: { type: [mongoose.Schema.Types.ObjectId], ref: "RequestedRide" }
 
     },
     {

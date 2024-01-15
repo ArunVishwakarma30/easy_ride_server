@@ -57,47 +57,116 @@ module.exports = {
         }
     },
 
-   // Get All Rides of the same userId OR driverID
-   GetAllRides: async (req, res) => {
-    const driverId = req.params.userId;  
+    // Get All Rides of the same userId OR driverID
+    GetAllRides: async (req, res) => {
+        const driverId = req.params.userId;
 
-    try {
-        const allRides = await Ride.find({ driverId })
-            .populate('driverId vehicleId passangersId'); // You can populate other fields as needed
+        try {
+            const allRides = await Ride.find({ driverId })
+                .populate('driverId vehicleId passangersId'); // You can populate other fields as needed
 
-        res.status(200).json(allRides);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-},
-
-  // Delete Ride by ID
-  DeleteRide: async (req, res) => {
-    const rideId = req.params.rideId;
-
-    try {
-        const deletedRide = await Ride.findByIdAndDelete(rideId);
-
-        console.log(deletedRide);
-        if (!deletedRide) {
-            return res.status(404).json({ error: 'Ride not found' });
+            res.status(200).json(allRides);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
         }
+    },
 
-        // Remove vehicle reference from user
-        await User.updateOne(
-            { _id: deletedRide.driverId },
-            { $pull: { createdRide: req.params.rideId } }
-        );
+    // Delete Ride by ID
+    DeleteRide: async (req, res) => {
+        const rideId = req.params.rideId;
 
-        
+        try {
+            const deletedRide = await Ride.findByIdAndDelete(rideId);
+
+            if (!deletedRide) {
+                return res.status(404).json({ error: 'Ride not found' });
+            }
+
+            // Remove vehicle reference from user
+            await User.updateOne(
+                { _id: deletedRide.driverId },
+                { $pull: { createdRide: req.params.rideId } }
+            );
 
 
-        res.status(200).json("Ride Successfully Deleted");
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-},
+
+
+            res.status(200).json("Ride Successfully Deleted");
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    // Update Ride by ID
+    UpdateRide: async (req, res) => {
+        const rideId = req.params.rideId;
+        const updateData = req.body;
+
+        try {
+            const updatedRide = await Ride.findByIdAndUpdate(rideId, {
+                $set: updateData
+            }, { new: true });
+
+            if (!updatedRide) {
+                return res.status(404).json({ error: 'Ride not found' });
+            }
+
+            // Destructure unnecessary fields
+            const { __v, createdAt, updatedAt, ...updatedData } = updatedRide._doc;
+
+            res.status(200).json(updatedData);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    // Search Ride
+    SearchRides: async (req, res) => {
+        const { departure, destination, seatsRequired } = req.body;
+
+        try {
+            // Find rides that have both departure and destination in stopBy
+            const matchingRides = await Ride.find({
+                $and: [
+                    { stopBy: { $regex: departure, $options: 'i' } },
+                    { stopBy: { $regex: destination, $options: 'i' } }
+                ]
+            });
+
+
+
+            // Filter rides based on available seats
+            const filteredRides = matchingRides.filter(ride => {
+                const stopByArray = ride.stopBy || [];
+
+                // Find the index of departure in the stopBy array
+                const departureIndex = stopByArray.findIndex(address => address.includes(departure));
+
+
+                if (departureIndex !== -1) {
+                    // Find the index of destination after the departure index
+                    const destinationIndex = stopByArray.slice(departureIndex + 1).findIndex(address => address.includes(destination));
+
+                    if (destinationIndex !== -1) {
+                        const remainingSeats = ride.seatsAvailable - seatsRequired;
+                        return remainingSeats >= 0;
+                    }
+                }
+
+                return false;
+            });
+
+            res.status(200).json(filteredRides);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+
+
 
 }

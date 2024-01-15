@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const RideSchema = mongoose.Schema(
     {
         departure: { type: String, required: true },
-        stopBy: { type: [String], default: [] },
+        stopBy: { type: Array, required: false },
         destination: { type: String, required: true },
         schedule: { type: Date, required: true },
         seatsOffering: { type: Number, required: false },
         seatsAvailable: { type: Number, required: false },
-         driverId: {
+        driverId: {
             type: mongoose.Schema.Types.ObjectId, ref: "User"
         },
         vehicleId: {
