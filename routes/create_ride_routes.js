@@ -21,5 +21,4 @@ router.delete('/:rideId', verifyToken, createRideController.DeleteRide);
 // search for rides
 router.post('/search', verifyToken, createRideController.SearchRides);
 
-
 module.exports = router

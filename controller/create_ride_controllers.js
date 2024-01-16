@@ -125,18 +125,20 @@ module.exports = {
 
     // Search Ride
     SearchRides: async (req, res) => {
-        const { departure, destination, seatsRequired } = req.body;
+        const { departure, destination, seatsRequired, schedule } = req.body;
 
         try {
-            // Find rides that have both departure and destination in stopBy
-            const matchingRides = await Ride.find({
-                $and: [
-                    { stopBy: { $regex: departure, $options: 'i' } },
-                    { stopBy: { $regex: destination, $options: 'i' } }
-                ]
-            });
+             // Ensure a consistent date format (YYYY-MM-DD) for comparison
+        const searchDate = new Date(schedule).toISOString().split('T')[0];
 
-
+        // Find rides that have both departure and destination in stopBy
+        const matchingRides = await Ride.find({
+            $and: [
+                { stopBy: { $regex: departure, $options: 'i' } },
+                { stopBy: { $regex: destination, $options: 'i' } },
+                { schedule: { $gte: new Date(searchDate), $lt: new Date(searchDate + 'T23:59:59.999Z') } }
+            ]
+        }).populate('driverId vehicleId passangersId');
 
             // Filter rides based on available seats
             const filteredRides = matchingRides.filter(ride => {
