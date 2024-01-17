@@ -128,29 +128,29 @@ module.exports = {
         const { departure, destination, seatsRequired, schedule } = req.body;
 
         try {
-             // Ensure a consistent date format (YYYY-MM-DD) for comparison
-        const searchDate = new Date(schedule).toISOString().split('T')[0];
+            // Ensure a consistent date format (YYYY-MM-DD) for comparison
+            const searchDate = new Date(schedule).toISOString().split('T')[0];
 
-        // Find rides that have both departure and destination in stopBy
-        const matchingRides = await Ride.find({
-            $and: [
-                { stopBy: { $regex: departure, $options: 'i' } },
-                { stopBy: { $regex: destination, $options: 'i' } },
-                { schedule: { $gte: new Date(searchDate), $lt: new Date(searchDate + 'T23:59:59.999Z') } }
-            ]
-        }).populate('driverId vehicleId passangersId');
+            // Find rides that have both departure and destination in stopBy
+
+            const matchingRides = await Ride.find({
+                $and: [
+                    { "stopBy.address": { $regex: departure, $options: 'i' } },
+                    { "stopBy.address": { $regex: destination, $options: 'i' } },
+                    { schedule: { $gte: new Date(searchDate), $lt: new Date(searchDate + 'T23:59:59.999Z') } }
+                ]
+            }).populate('driverId vehicleId passangersId');
 
             // Filter rides based on available seats
             const filteredRides = matchingRides.filter(ride => {
                 const stopByArray = ride.stopBy || [];
 
                 // Find the index of departure in the stopBy array
-                const departureIndex = stopByArray.findIndex(address => address.includes(departure));
-
+                const departureIndex = stopByArray.findIndex(stopBy => stopBy.address.includes(departure));
 
                 if (departureIndex !== -1) {
                     // Find the index of destination after the departure index
-                    const destinationIndex = stopByArray.slice(departureIndex + 1).findIndex(address => address.includes(destination));
+                    const destinationIndex = stopByArray.findIndex((stopBy, index) => index > departureIndex && stopBy.address.includes(destination));
 
                     if (destinationIndex !== -1) {
                         const remainingSeats = ride.seatsAvailable - seatsRequired;

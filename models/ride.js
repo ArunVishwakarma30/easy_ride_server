@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 const RideSchema = mongoose.Schema(
     {
         departure: { type: String, required: true },
-        stopBy: { type: Array, required: false },
+        stopBy: [
+            {
+                gMapAddressId : { type: String, required: true }, 
+                address: { type: String, required: true }
+            }
+        ],
         destination: { type: String, required: true },
         schedule: { type: Date, required: true },
         seatsOffering: { type: Number, required: false },
