@@ -5,12 +5,14 @@ const RideSchema = mongoose.Schema(
         departure: { type: String, required: true },
         stopBy: [
             {
-                gMapAddressId : { type: String, required: true }, 
+                gMapAddressId: { type: String, required: true },
                 address: { type: String, required: true }
             }
         ],
         destination: { type: String, required: true },
         schedule: { type: Date, required: true },
+        aboutRide: { type: String, required: false },
+        directBooking: { type: Boolean, default: false },
         seatsOffering: { type: Number, required: false },
         seatsAvailable: { type: Number, required: false },
         pricePerPass: { type: Number, default: 20 },
