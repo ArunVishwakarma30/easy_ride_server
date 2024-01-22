@@ -11,7 +11,7 @@ const RideSchema = mongoose.Schema(
         ],
         destination: { type: String, required: true },
         schedule: { type: Date, required: true },
-        aboutRide: { type: String, required: false },
+        aboutRide: { type: String, default : "" },
         directBooking: { type: Boolean, default: false },
         seatsOffering: { type: Number, required: false },
         seatsAvailable: { type: Number, required: false },
