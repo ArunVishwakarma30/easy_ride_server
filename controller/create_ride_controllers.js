@@ -10,7 +10,10 @@ module.exports = {
 
         try {
             const savedRide = await newRide.save();
-            const { __V, createdAt, updatedAt, ...others } = savedRide._doc;
+            const getRide = await Ride.findById(savedRide._id)
+                .populate('driverId vehicleId passangersId');
+
+            // const { __V, createdAt, updatedAt, ...others } = savedRide._doc;
 
             await User.updateOne(
                 {
@@ -25,9 +28,7 @@ module.exports = {
             }
             )
 
-            res.status(201).json({
-                ...others
-            });
+            res.status(201).json(getRide);
 
         } catch (error) {
             res.status(500).json(error);
@@ -40,7 +41,7 @@ module.exports = {
 
         try {
             const foundRide = await Ride.findById(rideId)
-                .populate('driverId vehicleId passangersId'); // You can populate other fields as needed
+                .populate('driverId vehicleId passangersId');
 
 
             if (!foundRide) {
@@ -63,7 +64,7 @@ module.exports = {
 
         try {
             const allRides = await Ride.find({ driverId })
-                .populate('driverId vehicleId passangersId'); // You can populate other fields as needed
+                .populate('driverId vehicleId passangersId');
 
             res.status(200).json(allRides);
         } catch (error) {
