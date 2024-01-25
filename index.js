@@ -6,6 +6,7 @@ const userRoute = require('./routes/user_routes');
 const vehicelRoute = require('./routes/vehicle_route');
 const createRideRoute = require('./routes/create_ride_routes');
 const requestRideRoute = require('./routes/requset_ride_routes');
+const cors = require('cors');
 
 dotenv.config();
 const app = express(); // instance of express
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGO_URL).then(
 )
 
 app.use(express.json());
+app.use(cors());
 app.use('/', authRoute);
 app.use('/user', userRoute);
 app.use('/vehicle', vehicelRoute);
