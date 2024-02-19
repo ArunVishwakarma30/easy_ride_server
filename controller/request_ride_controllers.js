@@ -26,6 +26,20 @@ module.exports = {
             }
             )
 
+            await Ride.updateOne(
+                {
+                    _id: req.body.rideId,
+                },
+                {
+                    $push: {
+                        requests: req.body.userId
+                    }
+                }, {
+                upsert: false, new: true
+            }
+
+            )
+
             res.status(201).json({
                 ...others
             });
@@ -93,7 +107,6 @@ module.exports = {
 
 
 
-
             res.status(200).json("Ride Successfully Deleted");
         } catch (error) {
             console.error(error);
@@ -115,7 +128,7 @@ module.exports = {
                 return res.status(404).json({ error: 'Ride not found' });
             }
 
-            if(updatedRide.isAccepted){
+            if (updatedRide.isAccepted) {
                 await Ride.updateOne(
                     {
                         _id: updatedRide.rideId,
@@ -128,21 +141,35 @@ module.exports = {
                     upsert: false, new: true,
                 }
                 )
-            }
-
-            if(updatedRide.isCanceled){
                 await Ride.updateOne(
                     {
                         _id: updatedRide.rideId,
                     },
                     {
                         $pull: {
-                            passangersId: updatedRide.userId
-                        },
-                    }, {
-                    upsert: false, new: true,
-                }
+                            requests : updatedRide.userId
+                        }
+                    }
                 )
+            }
+
+        
+            if (updatedRide.isCanceled) {
+                await Ride.updateOne(
+                    {
+                        _id: updatedRide.rideId,
+                    },
+                    {
+                        $pull: {
+                            passangersId: updatedRide.userId,
+                            requests: updatedRide.userId
+                        }
+                    },
+                    {
+                        upsert: false,
+                        new: true
+                    }
+                );
             }
 
             // Destructure unnecessary fields

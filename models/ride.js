@@ -25,6 +25,9 @@ const RideSchema = mongoose.Schema(
         passangersId: {
             type: [mongoose.Schema.Types.ObjectId], ref: "User"
         },
+        requests : {
+            type: [mongoose.Schema.Types.ObjectId], ref: "User"
+        },
         startTime: { type: Date, required: false },
         endTime: { type: Date, required: false },
         isCanceled: { type: Boolean, default: false },

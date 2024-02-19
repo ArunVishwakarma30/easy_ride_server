@@ -11,7 +11,7 @@ module.exports = {
         try {
             const savedRide = await newRide.save();
             const getRide = await Ride.findById(savedRide._id)
-                .populate('driverId vehicleId passangersId');
+                .populate('driverId vehicleId passangersId requests');
 
             // const { __V, createdAt, updatedAt, ...others } = savedRide._doc;
 
@@ -41,7 +41,7 @@ module.exports = {
 
         try {
             const foundRide = await Ride.findById(rideId)
-                .populate('driverId vehicleId passangersId');
+                .populate('driverId vehicleId passangersId requests');
 
 
             if (!foundRide) {
@@ -64,7 +64,8 @@ module.exports = {
 
         try {
             const allRides = await Ride.find({ driverId })
-                .populate('driverId vehicleId passangersId');
+                .populate('driverId vehicleId passangersId requests')
+                .sort({ updatedAt: -1 });
 
             res.status(200).json(allRides);
         } catch (error) {

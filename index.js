@@ -6,6 +6,8 @@ const userRoute = require('./routes/user_routes');
 const vehicelRoute = require('./routes/vehicle_route');
 const createRideRoute = require('./routes/create_ride_routes');
 const requestRideRoute = require('./routes/requset_ride_routes');
+const notificationRoute = require('./routes/notification_route');
+const verifyOtpRoute = require('./routes/verify_otp_route');
 const cors = require('cors');
 
 dotenv.config();
@@ -33,6 +35,8 @@ app.use('/user', userRoute);
 app.use('/vehicle', vehicelRoute);
 app.use('/createRide', createRideRoute);
 app.use('/requestRide', requestRideRoute);
+app.use('/notification', notificationRoute);
+app.use('/otp', verifyOtpRoute);
 
 app.listen(process.env.PORT || 50001,
     console.log(`App is running at PORT ${process.env.PORT || 5001}`)

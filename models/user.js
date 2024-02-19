@@ -5,6 +5,7 @@ const UserSchema = mongoose.Schema(
         firstName: { type: String, required: false },
         lastName: { type: String, required: false },
         phoneNumber: { type: String, required: false },
+        oneSignalId : {type : String, default : ""},
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         profile: { type: String, default: "" },
