@@ -26,19 +26,35 @@ module.exports = {
             }
             )
 
-            await Ride.updateOne(
-                {
-                    _id: req.body.rideId,
-                },
-                {
-                    $push: {
-                        requests: req.body.userId
-                    }
-                }, {
-                upsert: false, new: true
-            }
+            if (req.body.hasOwnProperty('isAccepted')) {
+                await Ride.updateOne(
+                    {
+                        _id: req.body.rideId,
+                    },
+                    {
+                        $push: {
+                            passangersId: req.body.userId
+                        }
+                    }, {
+                    upsert: false, new: true
+                }
 
-            )
+                )
+            } else {
+                await Ride.updateOne(
+                    {
+                        _id: req.body.rideId,
+                    },
+                    {
+                        $push: {
+                            requests: req.body.userId
+                        }
+                    }, {
+                    upsert: false, new: true
+                }
+
+                )
+            }
 
             res.status(201).json({
                 ...others
@@ -147,13 +163,13 @@ module.exports = {
                     },
                     {
                         $pull: {
-                            requests : updatedRide.userId
+                            requests: updatedRide.userId
                         }
                     }
                 )
             }
 
-        
+
             if (updatedRide.isCanceled) {
                 await Ride.updateOne(
                     {
