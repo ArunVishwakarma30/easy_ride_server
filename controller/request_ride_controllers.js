@@ -26,7 +26,7 @@ module.exports = {
             }
             )
 
-            if (req.body.hasOwnProperty('isAccepted')) {
+            if (req.body.isAccepted) {
                 await Ride.updateOne(
                     {
                         _id: req.body.rideId,
