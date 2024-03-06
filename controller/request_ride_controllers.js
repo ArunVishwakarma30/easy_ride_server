@@ -134,16 +134,24 @@ module.exports = {
     UpdateRide: async (req, res) => {
         const requestedRideId = req.params.rideId;
         const updateData = req.body;
-
+    
         try {
-            const updatedRide = await RequestdRide.findByIdAndUpdate(requestedRideId, {
-                $set: updateData
-            }, { new: true });
-
+            const requestedRide = await RequestdRide.findOne({ rideId: requestedRideId });
+    
+            if (!requestedRide) {
+                return res.status(404).json({ error: 'Requested ride not found' });
+            }
+    
+            const updatedRide = await RequestdRide.findOneAndUpdate(
+                { rideId: requestedRideId },
+                { $set: updateData },
+                { new: true }
+            );
+    
             if (!updatedRide) {
                 return res.status(404).json({ error: 'Ride not found' });
             }
-
+    
             if (updatedRide.isAccepted) {
                 await Ride.updateOne(
                     {
@@ -168,8 +176,7 @@ module.exports = {
                     }
                 )
             }
-
-
+    
             if (updatedRide.isCanceled) {
                 await Ride.updateOne(
                     {
@@ -187,16 +194,17 @@ module.exports = {
                     }
                 );
             }
-
+    
             // Destructure unnecessary fields
             const { __v, createdAt, updatedAt, ...updatedData } = updatedRide._doc;
-
+    
             res.status(200).json(updatedData);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    
 
 
 }
