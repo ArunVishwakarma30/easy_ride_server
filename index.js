@@ -8,7 +8,10 @@ const createRideRoute = require('./routes/create_ride_routes');
 const requestRideRoute = require('./routes/requset_ride_routes');
 const notificationRoute = require('./routes/notification_route');
 const verifyOtpRoute = require('./routes/verify_otp_route');
+const chatRoute = require('./routes/chat_route');
+const messageRoute = require('./routes/messages_route');
 const cors = require('cors');
+const { Socket } = require('socket.io');
 
 dotenv.config();
 const app = express(); // instance of express
@@ -37,10 +40,86 @@ app.use('/createRide', createRideRoute);
 app.use('/requestRide', requestRideRoute);
 app.use('/notification', notificationRoute);
 app.use('/otp', verifyOtpRoute);
+app.use('/chats', chatRoute);
+app.use('/messages', messageRoute);
 
-app.listen(process.env.PORT || 50001,
+const server = app.listen(process.env.PORT || 50001,
     console.log(`App is running at PORT ${process.env.PORT || 5001}`)
 );
+
+const IO = require('socket.io')(server, {
+    pingTimeout: 60000,
+    cors: {  // here we set origin from where we access our server
+
+        // for localhost
+        origin : "http://localhost:3000/" 
+        // hosted server
+        // origin: "https://jobappserver-production.up.railway.app/"
+    }
+});
+
+IO.on("connection", (socket) => {
+    console.log("Connected to sockets.");
+
+    socket.on('setup', (userId) => {
+        socket.join(userId);
+        socket.broadcast.emit("online-user", userId); // this we will notify to all usre that this particular user is online
+        console.log(userId);
+    });
+
+    socket.on('typing', (room) => {
+        console.log("typing");
+        console.log("room");
+        socket.to(room).emit('typing', room);
+    });
+
+    socket.on('stop typing', (room) => {
+        console.log("stop typing");
+        console.log("room");
+        socket.to(room).emit('stop typing', room);
+    });
+
+    socket.on('join chat', (room) => {
+        socket.join(room);
+        console.log("User joined : " + room);
+    }) 
+
+    socket.on("new message", (newMessgeRecieved) => {
+        var chat = newMessgeRecieved.chat;
+       console.log(`newMessgeRecieved ${newMessgeRecieved }`);
+       console.log(`newMessgeRecieved ${newMessgeRecieved.chat }`);
+
+        var room = chat._id;
+
+        var sender = newMessgeRecieved.sender;
+
+        if (!sender || sender._id) {
+            console.log("Sender not defiend");
+            return;
+        }
+        var senderId = sender._id;
+        console.log(`Message senderId : ${senderId}`);
+
+        const users = chat.users;
+
+        if (!users) {
+            console.log("User not found");
+            return;
+        }
+
+        // after passing through all the if statement then we will emit the message back 
+        socket.to(room).emit('message recieved', newMessgeRecieved);
+        socket.to(room).emit('message sent', "New message");
+        
+    });
+
+
+    socket.off("setup", (userId)=>{
+        console.log("User offline");
+        socket.leave(userId)
+    })
+
+})
 
 // script to get the city name --> 
 /*
