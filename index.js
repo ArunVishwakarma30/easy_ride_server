@@ -52,7 +52,7 @@ const IO = require('socket.io')(server, {
     cors: {  // here we set origin from where we access our server
 
         // for localhost
-       // origin : "http://localhost:3000/" 
+       origin : "http://localhost:3000/" 
         // hosted server
         // origin: "https://easyrideserver-production.up.railway.app/"
     }
@@ -85,31 +85,34 @@ IO.on("connection", (socket) => {
     }) 
 
     socket.on("new message", (newMessgeRecieved) => {
+        console.log(newMessgeRecieved);
         var chat = newMessgeRecieved.chat;
+        var recId = newMessgeRecieved.receiver
        console.log(`newMessgeRecieved ${newMessgeRecieved }`);
        console.log(`newMessgeRecieved ${newMessgeRecieved.chat }`);
 
-        var room = chat._id;
-
+    //    console.log(chat);
+    //     var room = chat._id;
         var sender = newMessgeRecieved.sender;
 
-        if (!sender || sender._id) {
-            console.log("Sender not defiend");
-            return;
-        }
+        // if (!sender || sender._id) {
+        //     console.log("Sender not defiend");
+        //     return;
+        // }
         var senderId = sender._id;
         console.log(`Message senderId : ${senderId}`);
 
-        const users = chat.users;
+        // const users = chat.users;
 
-        if (!users) {
-            console.log("User not found");
-            return;
-        }
+        // if (!users) {
+        //     console.log("User not found");
+        //     return;
+        // }
 
         // after passing through all the if statement then we will emit the message back 
-        socket.to(room).emit('message recieved', newMessgeRecieved);
-        socket.to(room).emit('message sent', "New message");
+        socket.to(recId).emit('message recieved', newMessgeRecieved);
+        socket.to(recId).emit('message sent', "New message");
+        console.log("objectfasdf fasdfd afdfsaf fa");
         
     });
 
