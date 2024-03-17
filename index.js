@@ -52,9 +52,9 @@ const IO = require('socket.io')(server, {
     cors: {  // here we set origin from where we access our server
 
         // for localhost
-        origin : "http://localhost:3000/" 
+       // origin : "http://localhost:3000/" 
         // hosted server
-        // origin: "https://jobappserver-production.up.railway.app/"
+        // origin: "https://easyrideserver-production.up.railway.app/"
     }
 });
 
