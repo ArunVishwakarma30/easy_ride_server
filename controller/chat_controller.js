@@ -5,42 +5,69 @@ module.exports = {
 
     // Create chat, ## Change this function name from accessChat to createChat 
     createChat: async (req, res) => {
-        const { userId } = req.body;
-        if (!userId) {
-            return res.status(400).json("Invalid user ID");
+        console.log("called");
+        const receiverId = req.body.receiverId;
+        const senderId = req.body.senderId;
+        console.log(`Rec Id ${receiverId}`);
+        console.log(`send Id ${senderId}`);
+        if (!receiverId) {
+            res.status(400).json("Invalid user Id ");
         }
 
-        try {
-            const existingChat = await Chat.findOne({
-                users: { $all: [req.user.id, userId] }
-            });
+        var isChat = await Chat.find({
+            $and: [
+                { users: { $elemMatch: { $eq: senderId } } }, // here this one is sender userId 
+                { users: { $elemMatch: { $eq: receiverId } } } // this one is reciever user id 
+            ]
+        })
+            .populate("users", "-password")
+            .populate("latestMessage");
 
-            if (existingChat) {
-                return res.json(existingChat);
-            }
+        console.log(isChat);
 
-            const chatData = {
-                chatName: req.user.id,  // You may want to adjust this
-                users: [req.user.id, userId]
+        isChat = await User.populate(isChat, {
+            path: "latestMessage.sender",
+            select: "firstName lastName phoneNumber profile email"
+        })
+
+        console.log(isChat);
+
+        if (isChat.length > 0) {
+            res.send(isChat[0])
+        } else {
+            var chatData = {
+                chatName: senderId,
+                users: [
+                    senderId, receiverId
+                ]
             };
 
-            const createdChat = await Chat.create(chatData);
-            const fullChat = await Chat.findById(createdChat._id)
-                .populate("users", "-password")
-                .populate("latestMessage.sender", "firstName lastName phoneNumber profile email");
+            try {
+                const createdChat = await Chat.create(chatData);
+                const FullChat = await Chat.findOne({ _id: createdChat._id, }).populate(
+                    "users", "-password"
+                );
+                res.status(200).json(FullChat);
 
-            return res.status(200).json(fullChat);
-        } catch (error) {
-            console.error("Failed to create chat:", error);
-            return res.status(400).json("Failed to create chat");
+            } catch (error) {
+                res.status(400).json("Failed to create chat ")
+
+            }
+
         }
     },
 
-
-
     getChat: async (req, res) => {
         try {
-            Chat.find({ users: { $elemMatch: { $eq: req.user.id } } })
+            const user = await User.findOne({ email: req.user.email });
+
+            if (!user) {
+                return res.status(404).json("User not found");
+            }
+
+            // Get user ID
+            const userId = user._id;
+            Chat.find({ users: { $elemMatch: { $eq: userId } } })
                 .populate("users", "-password")
                 .populate("latestMessage")
                 .sort({ updateAt: -1 })

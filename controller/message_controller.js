@@ -43,7 +43,7 @@ module.exports = {
         }
 
         var newMessag = {
-            sender: req.user.id,
+            sender: req.body.senderId,
             content: content,
             receiver: receiver,
             chatId: chatId

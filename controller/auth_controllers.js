@@ -31,6 +31,7 @@ module.exports = {
 
             const savedUser = await newUser.save();
             console.log(`User Id = ${savedUser._id}`);
+            
             const userToken = jwt.sign({
                 id: savedUser._id,
                 email : req.body.email
