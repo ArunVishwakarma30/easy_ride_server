@@ -12,7 +12,7 @@ const RequestRideSchema = mongoose.Schema(
         isAccepted: { type: Boolean, default: null },
         isCanceled: { type: Boolean, default: false },
         isFinished: { type: Boolean, default: false },
-
+            
     },
     {
         timestamps: true

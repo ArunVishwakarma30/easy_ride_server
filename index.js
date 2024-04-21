@@ -64,32 +64,25 @@ IO.on("connection", (socket) => {
     socket.on('setup', (userId) => {
         socket.join(userId);
         socket.broadcast.emit("online-user", userId); // this we will notify to all usre that this particular user is online
-        console.log(userId);
     });
 
     socket.on('typing', (room) => {
-        console.log("typing");
-        console.log("room");
+  
         socket.to(room).emit('typing', room);
     });
 
     socket.on('stop typing', (room) => {
-        console.log("stop typing");
-        console.log("room");
+ 
         socket.to(room).emit('stop typing', room);
     });
 
     socket.on('join chat', (room) => {
         socket.join(room);
-        console.log("User joined : " + room);
     }) 
 
     socket.on("new message", (newMessgeRecieved) => {
-        console.log(newMessgeRecieved);
         var chat = newMessgeRecieved.chat;
         var recId = newMessgeRecieved.receiver
-       console.log(`newMessgeRecieved ${newMessgeRecieved }`);
-       console.log(`newMessgeRecieved ${newMessgeRecieved.chat }`);
 
     //    console.log(chat);
     //     var room = chat._id;
@@ -100,7 +93,6 @@ IO.on("connection", (socket) => {
         //     return;
         // }
         var senderId = sender._id;
-        console.log(`Message senderId : ${senderId}`);
 
         // const users = chat.users;
 
@@ -112,13 +104,11 @@ IO.on("connection", (socket) => {
         // after passing through all the if statement then we will emit the message back 
         socket.to(recId).emit('message recieved', newMessgeRecieved);
         socket.to(recId).emit('message sent', "New message");
-        console.log("objectfasdf fasdfd afdfsaf fa");
         
     });
 
 
     socket.off("setup", (userId)=>{
-        console.log("User offline");
         socket.leave(userId)
     })
 
