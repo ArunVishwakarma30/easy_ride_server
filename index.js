@@ -21,7 +21,6 @@ app.get('/', (req, res) => {
         "Hello World"
     )
 });
-// "test": "echo \"Error: no test specified\" && exit 1"
 
 mongoose.connect(process.env.MONGO_URL).then(
     () => (console.log("Database is connected😊"))
